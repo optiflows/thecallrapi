@@ -87,7 +87,7 @@ def _clean_response(func, *args, **kwargs):
             raise TheCallrApiException(content['error']['message'])
 
         # The request is valid, and it succeed
-        return request['result']
+        return content['result']
 
 
 def _json(func):
