@@ -1,1 +1,1 @@
-import requests
+from thecallr import TheCallrApi

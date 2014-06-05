@@ -1,5 +1,5 @@
-import requests
 import json
+import requests
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import RequestException
 
@@ -7,12 +7,13 @@ from requests.exceptions import RequestException
 API_HOST = 'api.thecallr.com'
 API_URL = 'https://{url}/'.format(url=API_HOST)
 API_ERRORS = {
-    205: 'This Voice App cannot be assigned a DID.',
-    100: 'This feature is not allowed. Please contact the support.',
-    115: 'File not found.',
-    150: 'Missing property.',
-    1000: 'SMS routing error.',
-    151: 'Invalid property value.',
+    401: 'Authentication failed',
+    205: 'This Voice App cannot be assigned a DID',
+    100: 'This feature is not allowed. Please contact the support',
+    115: 'File not found',
+    150: 'Missing property',
+    1000: 'SMS routing error',
+    151: 'Invalid property value',
 }
 
 
@@ -51,7 +52,7 @@ class TheCallrApi(object):
             'jsonrpc': '2.0',
             'id': self.seq,
             'method': method,
-            'params': [args]
+            'params': filter(None, list(args))
         }
 
         self.seq = self.seq + 1
@@ -63,44 +64,44 @@ class TheCallrApi(object):
                           data=json.dumps(data))
 
 
-def _clean_response(func):
-    """
-    This decorator transforms a status code into a proper object or exception.
-    """
-    def inner(*args, **kwargs):
-        try:
-            request = func(*args, **kwargs)
-        except RequestException:
-            raise TheCallrApiException('The API request cannot been made')
-        else:
-            rsc = request.status_code
+def _clean_response(func, *args, **kwargs):
+    try:
+        request = func(*args, **kwargs)
+    except RequestException:
+        raise TheCallrApiException('The API request cannot been made')
+    else:
+        rsc = request.status_code
 
-            # Check returned status code and raise exceptions
-            if rsc is not 200:
-                if rsc in API_ERRORS:
-                    raise TheCallrApiException(API_ERRORS[rsc])
-                elif rsc is 110:
-                    return None
-                else:
-                    raise TheCallrApiException('Unknown error from API')
-            return request
-    return inner
+        # Check returned status code and raise exceptions if any
+        if rsc is not 200:
+            if rsc in API_ERRORS:
+                raise TheCallrApiException(API_ERRORS[rsc])
+            elif rsc is 110:
+                return None
+            else:
+                raise TheCallrApiException('Unknown error from API (%s)' % rsc)
+        return request
 
 
 def _json(func):
-    data = _clean_response(func)
-
-    if data:
-        return data.json()
-    return None
+    def inner(*args, **kwargs):
+        data = _clean_response(func, *args, **kwargs)
+        if data:
+            json = data.json()
+            if 'error' in json:
+                raise TheCallrApiException(json['error']['message'])
+            return json['result']
+        return None
+    return inner
 
 
 def _string(func):
-    data = _clean_response(func)
-
-    if data:
-        return data.text
-    return None
+    def inner(*args, **kwargs):
+        data = _clean_response(func, *args, **kwargs)
+        if data:
+            return data.text
+        return None
+    return inner
 
 
 class _Service(object):
@@ -138,12 +139,12 @@ class _SMS(_Service):
         """
         return self.manager.call('POST', 'sms.get_list', type, sender, to)
 
-    @_string
+    @_json
     def get_settings(self):
         return self.manager.call('POST', 'sms.get_settings')
 
     @_json
-    def send(self, sender, to, body, options):
+    def send(self, sender, to, body, flash=False):
         """
         Params:
             - from (string): The SMS sender.
@@ -151,7 +152,8 @@ class _SMS(_Service):
             - body (string): Text message (UTF-8 JSON strings).
             - options (object): SMS Options. Send NULL to use default values.
         """
-        return self.manager.call('POST', 'sms.send', sender, to, body, options)
+        return self.manager.call('POST', 'sms.send', sender, to, body,
+                                 {'flash_message': flash})
 
     @_json
     def set_settings(self, settings):
