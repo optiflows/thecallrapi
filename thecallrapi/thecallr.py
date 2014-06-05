@@ -35,12 +35,12 @@ class TheCallrApi(object):
         self.seq = 0
 
         self.apps = None
-        self.billing = None
+        self.billing = _Billing(self)
         self.cdr = None
         self.list = None
         self.media = None
         self.sms = _SMS(self)
-        self.system = None
+        self.system = _System(self)
         self.thedialr = None
 
     def call(self, type, method, *args):
@@ -80,18 +80,19 @@ def _clean_response(func, *args, **kwargs):
                 return None
             else:
                 raise TheCallrApiException('Unknown error from API (%s)' % rsc)
-        return request
+
+        # The request is valid, now check if it succeed
+        content = request.json()
+        if 'error' in content:
+            raise TheCallrApiException(content['error']['message'])
+
+        # The request is valid, and it succeed
+        return request['result']
 
 
 def _json(func):
     def inner(*args, **kwargs):
-        data = _clean_response(func, *args, **kwargs)
-        if data:
-            json = data.json()
-            if 'error' in json:
-                raise TheCallrApiException(json['error']['message'])
-            return json['result']
-        return None
+        return _clean_response(func, *args, **kwargs)
     return inner
 
 
@@ -99,7 +100,25 @@ def _string(func):
     def inner(*args, **kwargs):
         data = _clean_response(func, *args, **kwargs)
         if data:
-            return data.text
+            return str(data)
+        return None
+    return inner
+
+
+def _int(func):
+    def inner(*args, **kwargs):
+        data = _clean_response(func, *args, **kwargs)
+        if data:
+            return int(data)
+        return None
+    return inner
+
+
+def _float(func):
+    def inner(*args, **kwargs):
+        data = _clean_response(func, *args, **kwargs)
+        if data:
+            return float(data)
         return None
     return inner
 
@@ -143,7 +162,7 @@ class _SMS(_Service):
     def get_settings(self):
         return self.manager.call('POST', 'sms.get_settings')
 
-    @_json
+    @_string
     def send(self, sender, to, body, flash=False):
         """
         Params:
@@ -162,3 +181,21 @@ class _SMS(_Service):
             - settings (object): SMS settings.
         """
         return self.manager.call('POST', 'sms.set_settings', settings)
+
+
+class _System(_Service):
+    """
+    System service.
+    """
+    @_int
+    def get_timestamp(self):
+        return self.manager.call('POST', 'system.get_timestamp')
+
+
+class _Billing(_Service):
+    """
+    Billing service.
+    """
+    @_float
+    def get_prepaid_credit(self):
+        return self.manager.call('POST', 'billing.get_prepaid_credit')
