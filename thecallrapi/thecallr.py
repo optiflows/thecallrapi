@@ -1,13 +1,14 @@
 import json
 import requests
 from requests.auth import HTTPBasicAuth
-from requests.exceptions import RequestException
+from requests.exceptions import RequestException, Timeout
 from datetime import datetime
 
 
 API_HOST = 'api.thecallr.com'
 API_URL = 'https://{url}/'.format(url=API_HOST)
 
+API_TIMEOUT = 10
 API_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 API_ERRORS = {
     401: 'Authentication failed',
@@ -111,13 +112,14 @@ class TheCallrApi(object):
     """
     Wrapper for JSON-RPC 2.0 TheCallr API.
     """
-    def __init__(self, login, password):
+    def __init__(self, login, password, timeout=API_TIMEOUT):
         """
         When you subscribed to TheCallr products, you should have received
         credentials (aka login and password).
         """
         self.login = login
         self.password = password
+        self.timeout = timeout
         self.seq = 0
 
         self.analytics = _Analytics(self)
@@ -142,13 +144,18 @@ class TheCallrApi(object):
             'params': filter(None, list(args))
         }
 
-        self.seq = self.seq + 1
+        self.seq += 1
 
         req_method = getattr(requests, type.lower())
-        return req_method(API_URL,
-                          auth=HTTPBasicAuth(self.login, self.password),
-                          headers=headers,
-                          data=json.dumps(data))
+
+        try:
+            return req_method(API_URL,
+                              auth=HTTPBasicAuth(self.login, self.password),
+                              headers=headers,
+                              data=json.dumps(data),
+                              timeout=self.timeout)
+        except Timeout as e:
+            raise TheCallrApiException(e)
 
 
 """
