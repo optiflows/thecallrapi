@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='thecallrapi',
-    version='0.1.0',
+    version='0.1.1-dev',
     description='Python module to manage TheCallr API',
     author='Optiflows R&D',
     author_email='rand@optiflows.com',
