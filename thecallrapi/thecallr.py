@@ -124,64 +124,78 @@ class _Analytics(_Service):
         Calls analytics.
         """
         def cli_countries(self, sort, dfrom, dto, limit):
-            return self.api.call('POST', 'analytics/calls.cli_countries',
-                                 sort, dfrom, dto, limit)
+            return (yield from self.api.call(
+                'POST', 'analytics/calls.cli_countries',
+                sort, dfrom, dto, limit
+            ))
 
         def history(self, caller, to):
-            return self.api.call('POST', 'analytics/calls.history',
-                                 caller, to)
+            return (yield from self.api.call(
+                'POST', 'analytics/calls.history', caller, to
+            ))
 
         def inbound_did(self, sort, dfrom, dto, limit):
-            return self.api.call('POST', 'analytics/calls.inbound_did',
-                                 sort, dfrom, dto, limit)
+            return (yield from self.api.call(
+                'POST', 'analytics/calls.inbound_did',
+                sort, dfrom, dto, limit
+            ))
 
         def outbound_countries(self, sort, dfrom, dto, limit):
-            return self.api.call('POST',
-                                 'analytics/calls.outbound_countries',
-                                 sort, dfrom, dto, limit)
+            return (yield from self.api.call(
+                'POST', 'analytics/calls.outbound_countries',
+                sort, dfrom, dto, limit
+            ))
 
         def outbound_destinations(self, sort, dfrom, dto, limit):
-            return self.api.call('POST',
-                                 'analytics/calls.outbound_destinations',
-                                 sort, dfrom, dto, limit)
+            return (yield from self.api.call(
+                'POST', 'analytics/calls.outbound_destinations',
+                sort, dfrom, dto, limit
+            ))
 
         def summary(self, dfrom, dto):
-            return self.api.call('POST', 'analytics/calls.summary',
-                                 dfrom, dto)
+            return (yield from self.api.call(
+                'POST', 'analytics/calls.summary', dfrom, dto
+            ))
 
         def top_apps(self, atype, sort, dfrom, dto, limit):
-            return self.api.call('POST', 'analytics/calls.top_apps',
-                                 atype, sort, dfrom, dto, limit)
+            return (yield from self.api.call(
+                'POST', 'analytics/calls.top_apps',
+                atype, sort, dfrom, dto, limit
+            ))
 
     class SMS(_Service):
         """
         SMS analytics.
         """
         def history(self, dfrom, dto):
-            return self.api.call('POST', 'analytics/sms.history',
-                                 dfrom, dto)
+            return (yield from self.api.call(
+                'POST', 'analytics/sms.history', dfrom, dto
+            ))
 
         def history_out(self, dfrom, dto, fields):
-            return self.api.call('POST', 'analytics/sms.history_out',
-                                 dfrom, dto, fields)
+            return (yield from self.api.call(
+                'POST', 'analytics/sms.history_out', dfrom, dto, fields
+            ))
 
         def history_out_by_status(self, dfrom, dto):
-            return self.api.call('POST',
-                                 'analytics/sms.history_out_by_status',
-                                 dfrom, dto)
+            return (yield from self.api.call(
+                'POST', 'analytics/sms.history_out_by_status', dfrom, dto
+            ))
 
         def summary(self, dfrom, dto):
-            return self.api.call('POST', 'analytics/sms.summary',
-                                 dfrom, dto)
+            return (yield from self.api.call(
+                'POST', 'analytics/sms.summary', dfrom, dto
+            ))
 
         def summary_out(self, dfrom, dto, fields):
-            return self.api.call('POST', 'analytics/sms.summary_out',
-                                 dfrom, dto, fields)
+            return (yield from self.api.call(
+                'POST', 'analytics/sms.summary_out', dfrom, dto, fields
+            ))
 
         def summary_out_by_status(self, dfrom, dto):
-            return self.api.call('POST',
-                                 'analytics/sms.summary_out_by_status',
-                                 dfrom, dto)
+            return (yield from self.api.call(
+                'POST', 'analytics/sms.summary_out_by_status', dfrom, dto
+            ))
 
 
 class _Media(_Service):
@@ -192,23 +206,30 @@ class _Media(_Service):
         self.tts = self.TTS(self.api)
 
     def get_quota_status(self):
-        return self.api.call('POST', 'media.get_quota_status')
+        return (yield from self.api.call('POST', 'media.get_quota_status'))
 
     class Library(_Service):
         def create(self, name):
-            return self.api.call('POST', 'media/library.create', name)
+            return (yield from self.api.call(
+                'POST', 'media/library.create', name
+            ))
 
         def get(self, lib_id):
-            return self.api.call('POST', 'media/library.get', lib_id)
+            return (yield from self.api.call(
+                'POST', 'media/library.get', lib_id
+            ))
 
     class TTS(_Service):
         def get_voice_list(self):
-            return self.api.call('POST', 'media/tts.get_voice_list')
+            return (yield from self.api.call(
+                'POST', 'media/tts.get_voice_list'
+            ))
 
         def set_content(self, media_id, text, voice, rate=50):
-            return self.api.call('POST', 'media/tts.set_content',
-                                 media_id, text, voice,
-                                 {'rate': rate})
+            return (yield from self.api.call(
+                'POST', 'media/tts.set_content',
+                media_id, text, voice, {'rate': rate}
+            ))
 
 
 class _SMS(_Service):
@@ -216,23 +237,28 @@ class _SMS(_Service):
     Send and list SMS.
     """
     def get(self, sms_id):
-        return self.api.call('POST', 'sms.get', sms_id)
+        return (yield from self.api.call('POST', 'sms.get', sms_id))
 
     def get_count_for_body(self, body):
-        return self.api.call('POST', 'sms.get_count_for_body', body)
+        return (yield from self.api.call(
+            'POST', 'sms.get_count_for_body', body
+        ))
 
     def get_list(self, stype, sender, to):
-        return self.api.call('POST', 'sms.get_list', stype, sender, to)
+        return (yield from self.api.call(
+            'POST', 'sms.get_list', stype, sender, to
+        ))
 
     def get_settings(self):
-        return self.api.call('POST', 'sms.get_settings')
+        return (yield from self.api.call('POST', 'sms.get_settings'))
 
     def send(self, sender, to, body, flash=False):
-        return self.api.call('POST', 'sms.send', sender, to, body,
-                             {'flash_message': flash})
+        return (yield from self.api.call(
+            'POST', 'sms.send', sender, to, body, {'flash_message': flash}
+        ))
 
     def set_settings(self, settings):
-        return self.api.call('POST', 'sms.set_settings', settings)
+        return (yield from self.api.call('POST', 'sms.set_settings', settings))
 
 
 class _System(_Service):
@@ -240,7 +266,7 @@ class _System(_Service):
     System service.
     """
     def get_timestamp(self):
-        return self.api.call('POST', 'system.get_timestamp')
+        return (yield from self.api.call('POST', 'system.get_timestamp'))
 
 
 class _Billing(_Service):
@@ -248,4 +274,4 @@ class _Billing(_Service):
     Billing service.
     """
     def get_prepaid_credit(self):
-        return self.api.call('POST', 'billing.get_prepaid_credit')
+        return (yield from self.api.call('POST', 'billing.get_prepaid_credit'))
