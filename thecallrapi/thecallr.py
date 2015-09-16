@@ -125,33 +125,33 @@ class _Analytics(_Service):
         """
         def cli_countries(self, sort, dfrom, dto, limit):
             return self.api.call('POST', 'analytics/calls.cli_countries',
-                                     sort, dfrom, dto, limit)
+                                 sort, dfrom, dto, limit)
 
         def history(self, caller, to):
             return self.api.call('POST', 'analytics/calls.history',
-                                     caller, to)
+                                 caller, to)
 
         def inbound_did(self, sort, dfrom, dto, limit):
             return self.api.call('POST', 'analytics/calls.inbound_did',
-                                     sort, dfrom, dto, limit)
+                                 sort, dfrom, dto, limit)
 
         def outbound_countries(self, sort, dfrom, dto, limit):
             return self.api.call('POST',
-                                     'analytics/calls.outbound_countries',
-                                     sort, dfrom, dto, limit)
+                                 'analytics/calls.outbound_countries',
+                                 sort, dfrom, dto, limit)
 
         def outbound_destinations(self, sort, dfrom, dto, limit):
             return self.api.call('POST',
-                                     'analytics/calls.outbound_destinations',
-                                     sort, dfrom, dto, limit)
+                                 'analytics/calls.outbound_destinations',
+                                 sort, dfrom, dto, limit)
 
         def summary(self, dfrom, dto):
             return self.api.call('POST', 'analytics/calls.summary',
-                                     dfrom, dto)
+                                 dfrom, dto)
 
         def top_apps(self, atype, sort, dfrom, dto, limit):
             return self.api.call('POST', 'analytics/calls.top_apps',
-                                     atype, sort, dfrom, dto, limit)
+                                 atype, sort, dfrom, dto, limit)
 
     class SMS(_Service):
         """
@@ -159,29 +159,29 @@ class _Analytics(_Service):
         """
         def history(self, dfrom, dto):
             return self.api.call('POST', 'analytics/sms.history',
-                                     dfrom, dto)
+                                 dfrom, dto)
 
         def history_out(self, dfrom, dto, fields):
             return self.api.call('POST', 'analytics/sms.history_out',
-                                     dfrom, dto, fields)
+                                 dfrom, dto, fields)
 
         def history_out_by_status(self, dfrom, dto):
             return self.api.call('POST',
-                                     'analytics/sms.history_out_by_status',
-                                     dfrom, dto)
+                                 'analytics/sms.history_out_by_status',
+                                 dfrom, dto)
 
         def summary(self, dfrom, dto):
             return self.api.call('POST', 'analytics/sms.summary',
-                                     dfrom, dto)
+                                 dfrom, dto)
 
         def summary_out(self, dfrom, dto, fields):
             return self.api.call('POST', 'analytics/sms.summary_out',
-                                     dfrom, dto, fields)
+                                 dfrom, dto, fields)
 
         def summary_out_by_status(self, dfrom, dto):
             return self.api.call('POST',
-                                     'analytics/sms.summary_out_by_status',
-                                     dfrom, dto)
+                                 'analytics/sms.summary_out_by_status',
+                                 dfrom, dto)
 
 
 class _Media(_Service):
@@ -207,8 +207,8 @@ class _Media(_Service):
 
         def set_content(self, media_id, text, voice, rate=50):
             return self.api.call('POST', 'media/tts.set_content',
-                                     media_id, text, voice,
-                                     {'rate': rate})
+                                 media_id, text, voice,
+                                 {'rate': rate})
 
 
 class _SMS(_Service):
@@ -229,7 +229,8 @@ class _SMS(_Service):
 
     def send(self, sender, to, body, flash=False):
         return self.api.call('POST', 'sms.send', sender, to, body,
-                                 {'flash_message': flash})
+                             {'flash_message': flash})
+
     def set_settings(self, settings):
         return self.api.call('POST', 'sms.set_settings', settings)
 
