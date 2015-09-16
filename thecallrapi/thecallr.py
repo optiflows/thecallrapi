@@ -93,7 +93,7 @@ class TheCallrApi(object):
                     body = body['error']
                     status = 400
                 else:
-                    body = body['result']
+                    body = {'result': body['result']}
             elif status in API_ERRORS:
                 body = API_ERRORS[status]
             else:
