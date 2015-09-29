@@ -19,4 +19,11 @@ setup(
     author_email='rand@surycat.com',
     install_requires=reqs,
     packages=find_packages(),
+    classifiers=(
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3 :: Only',
+    ),
 )
