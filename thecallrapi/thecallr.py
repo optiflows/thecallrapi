@@ -244,9 +244,9 @@ class _SMS(_Service):
             'POST', 'sms.get_count_for_body', body
         ))
 
-    def get_list(self, stype, sender, to):
+    def get_list(self, stype, sfrom, sto):
         return (yield from self.api.call(
-            'POST', 'sms.get_list', stype, sender, to
+            'POST', 'sms.get_list', stype, sfrom, sto
         ))
 
     def get_settings(self):
