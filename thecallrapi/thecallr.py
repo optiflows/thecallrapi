@@ -99,6 +99,7 @@ class TheCallrApi(object):
             else:
                 body = UNKNOWN_ERROR
 
+        response.close()
         return status, body
 
 
