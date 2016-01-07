@@ -30,6 +30,7 @@ Main class that needs to be instanciated to access the API.
 
 
 class TheCallrApi(object):
+
     """
     Wrapper for JSON-RPC 2.0 TheCallr API.
     """
@@ -109,6 +110,7 @@ API services.
 
 
 class _Service(object):
+
     def __init__(self, api):
         self.api = api
 
@@ -121,43 +123,52 @@ class _Analytics(_Service):
         self.sms = self.SMS(self.api)
 
     class Calls(_Service):
+
         """
         Calls analytics.
         """
+
+        @asyncio.coroutine
         def cli_countries(self, sort, dfrom, dto, limit):
             return (yield from self.api.call(
                 'POST', 'analytics/calls.cli_countries',
                 sort, dfrom, dto, limit
             ))
 
+        @asyncio.coroutine
         def history(self, caller, to):
             return (yield from self.api.call(
                 'POST', 'analytics/calls.history', caller, to
             ))
 
+        @asyncio.coroutine
         def inbound_did(self, sort, dfrom, dto, limit):
             return (yield from self.api.call(
                 'POST', 'analytics/calls.inbound_did',
                 sort, dfrom, dto, limit
             ))
 
+        @asyncio.coroutine
         def outbound_countries(self, sort, dfrom, dto, limit):
             return (yield from self.api.call(
                 'POST', 'analytics/calls.outbound_countries',
                 sort, dfrom, dto, limit
             ))
 
+        @asyncio.coroutine
         def outbound_destinations(self, sort, dfrom, dto, limit):
             return (yield from self.api.call(
                 'POST', 'analytics/calls.outbound_destinations',
                 sort, dfrom, dto, limit
             ))
 
+        @asyncio.coroutine
         def summary(self, dfrom, dto):
             return (yield from self.api.call(
                 'POST', 'analytics/calls.summary', dfrom, dto
             ))
 
+        @asyncio.coroutine
         def top_apps(self, atype, sort, dfrom, dto, limit):
             return (yield from self.api.call(
                 'POST', 'analytics/calls.top_apps',
@@ -165,34 +176,42 @@ class _Analytics(_Service):
             ))
 
     class SMS(_Service):
+
         """
         SMS analytics.
         """
+
+        @asyncio.coroutine
         def history(self, dfrom, dto):
             return (yield from self.api.call(
                 'POST', 'analytics/sms.history', dfrom, dto
             ))
 
+        @asyncio.coroutine
         def history_out(self, dfrom, dto, fields):
             return (yield from self.api.call(
                 'POST', 'analytics/sms.history_out', dfrom, dto, fields
             ))
 
+        @asyncio.coroutine
         def history_out_by_status(self, dfrom, dto):
             return (yield from self.api.call(
                 'POST', 'analytics/sms.history_out_by_status', dfrom, dto
             ))
 
+        @asyncio.coroutine
         def summary(self, dfrom, dto):
             return (yield from self.api.call(
                 'POST', 'analytics/sms.summary', dfrom, dto
             ))
 
+        @asyncio.coroutine
         def summary_out(self, dfrom, dto, fields):
             return (yield from self.api.call(
                 'POST', 'analytics/sms.summary_out', dfrom, dto, fields
             ))
 
+        @asyncio.coroutine
         def summary_out_by_status(self, dfrom, dto):
             return (yield from self.api.call(
                 'POST', 'analytics/sms.summary_out_by_status', dfrom, dto
@@ -206,26 +225,33 @@ class _Media(_Service):
         self.library = self.Library(self.api)
         self.tts = self.TTS(self.api)
 
+    @asyncio.coroutine
     def get_quota_status(self):
         return (yield from self.api.call('POST', 'media.get_quota_status'))
 
     class Library(_Service):
+
+        @asyncio.coroutine
         def create(self, name):
             return (yield from self.api.call(
                 'POST', 'media/library.create', name
             ))
 
+        @asyncio.coroutine
         def get(self, lib_id):
             return (yield from self.api.call(
                 'POST', 'media/library.get', lib_id
             ))
 
     class TTS(_Service):
+
+        @asyncio.coroutine
         def get_voice_list(self):
             return (yield from self.api.call(
                 'POST', 'media/tts.get_voice_list'
             ))
 
+        @asyncio.coroutine
         def set_content(self, media_id, text, voice, rate=50):
             return (yield from self.api.call(
                 'POST', 'media/tts.set_content',
@@ -234,45 +260,59 @@ class _Media(_Service):
 
 
 class _SMS(_Service):
+
     """
     Send and list SMS.
     """
+
+    @asyncio.coroutine
     def get(self, sms_id):
         return (yield from self.api.call('POST', 'sms.get', sms_id))
 
+    @asyncio.coroutine
     def get_count_for_body(self, body):
         return (yield from self.api.call(
             'POST', 'sms.get_count_for_body', body
         ))
 
+    @asyncio.coroutine
     def get_list(self, stype, sfrom, sto):
         return (yield from self.api.call(
             'POST', 'sms.get_list', stype, sfrom, sto
         ))
 
+    @asyncio.coroutine
     def get_settings(self):
         return (yield from self.api.call('POST', 'sms.get_settings'))
 
+    @asyncio.coroutine
     def send(self, sender, to, body, flash=False):
         return (yield from self.api.call(
             'POST', 'sms.send', sender, to, body, {'flash_message': flash}
         ))
 
+    @asyncio.coroutine
     def set_settings(self, settings):
         return (yield from self.api.call('POST', 'sms.set_settings', settings))
 
 
 class _System(_Service):
+
     """
     System service.
     """
+
+    @asyncio.coroutine
     def get_timestamp(self):
         return (yield from self.api.call('POST', 'system.get_timestamp'))
 
 
 class _Billing(_Service):
+
     """
     Billing service.
     """
+
+    @asyncio.coroutine
     def get_prepaid_credit(self):
         return (yield from self.api.call('POST', 'billing.get_prepaid_credit'))
