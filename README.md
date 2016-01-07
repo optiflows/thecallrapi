@@ -1,5 +1,7 @@
 # TheCallr API
-[![pypi version](http://img.shields.io/pypi/v/thecallrapi.svg)](https://pypi.python.org/pypi/thecallrapi) [![pypi download week](http://img.shields.io/pypi/dw/thecallrapi.svg)](https://pypi.python.org/pypi/thecallrapi)
+[![PyPI](https://img.shields.io/pypi/v/thecallrapi.svg)](https://pypi.python.org/pypi/thecallrapi/)
+[![PyPI](https://img.shields.io/pypi/pyversions/thecallrapi.svg)](https://pypi.python.org/pypi/thecallrapi/)
+[![pypi download week](http://img.shields.io/pypi/dw/thecallrapi.svg)](https://pypi.python.org/pypi/thecallrapi/)
 
 Python module to manage TheCallr's API
 
@@ -10,5 +12,5 @@ An example of call :
 from thecallrapi import TheCallrApi
 
 api = TheCallrApi('login', 'password')
-status, body = yield from api.sms.send('sender_name', 'phone_number', 'body')
+status, body = await api.sms.send('sender_name', 'phone_number', 'body')
 ```
